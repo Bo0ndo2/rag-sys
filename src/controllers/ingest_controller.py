@@ -1,9 +1,3 @@
-"""
-Ingest Controller — Phase 1 + Phase 3
-========================================
-Orchestrates the full ingestion pipeline:
-  PDF → parse → chunk → embed → upsert to VectorDB → store metadata
-"""
 
 import uuid
 from pathlib import Path

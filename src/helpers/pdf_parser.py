@@ -1,14 +1,3 @@
-"""
-PDF Parser — Phase 1: Data Processing
-======================================
-Uses PyMuPDF (fitz) to extract text from raw PDF files.
-Handles:
-  - Multi-page documents
-  - Arabic RTL text (bidi normalisation)
-  - Metadata extraction (author, title, page count)
-  - Noisy whitespace / hyphenation cleanup
-"""
-
 import re
 import fitz  # PyMuPDF
 from pathlib import Path
@@ -20,13 +9,7 @@ from typing import Optional
 # ---------------------------------------------------------------------------
 
 def _normalise_arabic(text: str) -> str:
-    """
-    Minimal Arabic normalisation required before embedding:
-      1. Strip diacritics (tashkeel) — e.g. fatha, kasra, shadda
-      2. Normalise alef variants → bare alef
-      3. Normalise teh marbuta → heh
-      4. Remove tatweel (kashida)
-    """
+    
     # Remove tashkeel (U+064B–U+065F, U+0670)
     text = re.sub(r"[\u064B-\u065F\u0670]", "", text)
     # Alef with hamza variants → bare alef
@@ -52,17 +35,7 @@ def _clean_text(text: str) -> str:
 # ---------------------------------------------------------------------------
 
 class PDFParser:
-    """
-    Parse a PDF file and return cleaned page texts + metadata.
-
-    Usage
-    -----
-    parser = PDFParser("path/to/cv.pdf")
-    result = parser.parse()
-    # result.pages  -> list[str]  (one string per page)
-    # result.full_text -> str     (concatenated)
-    # result.metadata -> dict
-    """
+  
 
     def __init__(self, file_path: str | Path):
         self.path = Path(file_path)
@@ -74,10 +47,12 @@ class PDFParser:
         total_alpha  = len(re.findall(r"[A-Za-z\u0600-\u06FF]", text))
         return total_alpha > 0 and (arabic_chars / total_alpha) > 0.4
 
+
     def parse(self) -> "ParseResult":
         doc = fitz.open(str(self.path))
         pages: list[str] = []
         is_arabic = False
+        
 
         for page in doc:
             # Extract text preserving reading order; for RTL pages use "rawdict"

@@ -1,9 +1,3 @@
-"""
-Query Controller — Phase 3: RAG Logic & Retrieval
-===================================================
-Pipeline:
-  user query → embed → vector search (top-k) → build context → LLM generate → return
-"""
 
 from src.helpers.config import get_settings
 from src.stores.llm import LLMFactory

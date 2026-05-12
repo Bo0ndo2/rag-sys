@@ -1,25 +1,3 @@
-"""
-Chunking Strategy — Phase 1
-============================
-Strategy: Sliding-window token-based chunking
-  - Chunk size  : 500 tokens
-  - Overlap     : 50  tokens  (10% of chunk size)
-
-Mathematical justification
---------------------------
-  * OpenAI text-embedding-3-small has a context window of 8191 tokens.
-    500 tokens per chunk comfortably fits, leaving room for the query.
-  * 10% overlap (50 tok) ensures named entities or skill phrases that straddle
-    a boundary are captured in at least one of the two adjacent chunks.
-  * For a typical 2-page CV (~800 words ≈ 600 tokens) this yields ~2 chunks,
-    which is semantically meaningful (e.g. education section vs experience section).
-  * Larger chunks (1 000+) reduce retrieval precision; smaller (<200) hurt context
-    coherence. 500 tok is the empirically sweet-spot for dense professional text.
-
-Each chunk carries metadata (source doc, page number, chunk index) so the
-retrieval result is always traceable back to the original document.
-"""
-
 import re
 from dataclasses import dataclass, field
 from typing import Optional
@@ -68,14 +46,7 @@ class Chunk:
 # ---------------------------------------------------------------------------
 
 class TextChunker:
-    """
-    Sliding-window token chunker.
-
-    Parameters
-    ----------
-    chunk_size    : target tokens per chunk  (default 500)
-    chunk_overlap : overlap tokens            (default 50)
-    """
+   
 
     def __init__(self, chunk_size: int = 500, chunk_overlap: int = 50):
         if chunk_overlap >= chunk_size:
@@ -95,10 +66,7 @@ class TextChunker:
         file_name: str,
         extra_metadata: dict | None = None,
     ) -> list[Chunk]:
-        """
-        Chunk a list of page strings into overlapping token windows.
-        Preserves page attribution whenever possible.
-        """
+       
         chunks: list[Chunk] = []
         chunk_index = 0
 

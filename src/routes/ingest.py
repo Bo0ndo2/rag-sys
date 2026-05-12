@@ -9,16 +9,7 @@ router = APIRouter()
 
 @router.post("/ingest", response_model=IngestResponse, summary="Ingest a PDF document")
 async def ingest_document(request: Request, file: UploadFile = File(...)):
-    """
-    Upload a PDF file (CV, legal doc, etc.).
-    The system will:
-      1. Parse and clean the text (Arabic-aware)
-      2. Chunk with 500-token windows and 50-token overlap
-      3. Embed each chunk via the configured embedding model
-      4. Store vectors in Qdrant
-
-    Returns metadata about the ingested document.
-    """
+    
     if not file.filename or not file.filename.lower().endswith(".pdf"):
         raise HTTPException(status_code=400, detail="Only PDF files are supported.")
 
